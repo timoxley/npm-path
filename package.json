@@ -1,7 +1,7 @@
 {
   "name": "npm-path",
-  "version": "0.0.0",
-  "description": "",
+  "version": "1.0.0",
+  "description": "Get a PATH with all executables available to npm scripts.",
   "main": "index.js",
   "bin": "bin/npm-path",
   "scripts": {
