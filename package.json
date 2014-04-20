@@ -1,0 +1,19 @@
+{
+  "name": "npm-path",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": "bin/npm-path",
+  "scripts": {
+    "test": "faucet"
+  },
+  "author": "Tim Oxley",
+  "license": "MIT",
+  "devDependencies": {
+    "faucet": "0.0.1",
+    "tape": "^2.12.3"
+  },
+  "dependencies": {
+    "which": "^1.0.5"
+  }
+}
