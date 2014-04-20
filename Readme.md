@@ -1,12 +1,10 @@
 # npm-path
 
-### Set the `$PATH` as if you were within an `npm run`.
+### Get a PATH containing locally installed module executables.
 
-`npm-path` replicates the behaviour of `npm` when it changes the `$PATH` to execute a lifecycle script
-e.g. `npm install` `npm test`, `npm run <scriptname>`.
+`npm-path` will get you a PATH with all of the executables available to npm scripts, without booting up all of npm(1).
 
-
-#### `npm-path` will set your `$PATH` to include:
+#### `npm-path` will set your PATH to include:
 
 * All of the `node_modules/.bin` directories from the current directory, up through all of its parents. This allows you to invoke the executables for any installed modules. e.g. if `mocha` is installed a dependency of the current module, then `mocha` will be available on a `npm-path` generated `$PATH`.
 * The directory containing the current `node` executable, so any scripts that invoke `node` will execute the same `node`.
@@ -16,92 +14,104 @@ e.g. `npm install` `npm test`, `npm run <scriptname>`.
 
 ### Command-line
 
-Calling `npm-path` from the commandline is the equivalent of executing an npm script with the body `echo $PATH`.
-
 ```bash
+# Prints the augmented PATH to the console
 > npm-path
-# /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/Users/timoxley/Projects/npm-path/node_modules/.bin etc
-
-# Example
-# Setting the npm enhanced PATH before running a script
-
-# PATH Before:
-> node -e "console.log(process.env.PATH)"
-/Users/timoxley/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin
-
-# PATH After:
-> PATH=`npm-path` node -e "console.log(process.env.PATH)"
-/usr/local/lib/node_modules/npm/bin/node-gyp-bin:/Users/timoxley/Projects/npm-path/node_modules/.bin:/usr/local/bin:/Users/timoxley/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin
+# /usr/local/lib/node_modules/npm/bin/node-gyp-bin:.../node_modules/.bin:/.../usr/local/bin:/usr/local/sbin: ... etc
 ```
+
+Calling `npm-path` from the commandline is the equivalent of executing an npm script with the body `echo $PATH`, but without all of the overhead of booting or depending on `npm`.
 
 ### Set PATH
 
-This will set the 'npm enhanced' PATH.
+This will set the augmented PATH for the current process environment, or an environment you supply.
+
+```js
+var npmPath = require('npm-path')
+var PATH = npmPath.PATH // get platform independent PATH key
+
+npmPath(function(err, $PATH) {
+  
+  // Note: current environment is modified!
+  console.log(process.env[PATH] == $PATH) // true
+  
+  console.log($PATH)
+  // /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/.../.bin:/usr/local/bin: ...etc
+  
+})
+
+// more explicit alternative syntax
+npmPath.set(function(err, $PATH) {
+  // ...
+})
+```
+
+#### Synchronous Alternative
 
 ```js
 
-var npmPath = require('npm-path')
+//  supplying no callback will execute method synchronously
+var $PATH = npmPath()
+console.log($PATH)
 
-// Asynchronously
+// more explicit alternative syntax
+$PATH = npmPath.setSync()
+```
 
-npmPath(function(err, $PATH) {
-  console.log($PATH)
-})
+#### Optional Options
 
-// Optional options
+```js
 var options = {
-  env: process.env, // Environment to use. `process.env` is the default.
-  cwd: process.cwd() // Working directory. `process.cwd()` is the default.
+  env: process.env, // default.
+  cwd: process.cwd() // default.
 }
 
 npmPath(options, function(err, $PATH) {
-  console.log($PATH)
-})
-
-// `npmPath.set` is a more explicit alternative to `npmPath`
-console.log(npmPath.set == npmPath) // true
-npmPath.set(options, function(err, $PATH) {
   // ...
 })
 
-// Synchronously
+npmPath.setSync(options)
 
-var $PATH = npmPath() // passing no function will execute synchronously
-var $PATH = npmPath.setSync() // more explicit alternative
-
-console.log($PATH)
-// /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/Users/timoxley/Projects/npm-path/node_modules/.bin:/usr/local/bin: ...etc
+  // ...
 
 ```
 
+
 ### Get $PATH
 
-This will get the 'npm enhanced' path, but *does not modify the $PATH*.
-Takes the exact same options as when setting the path.
+This will get npm augmented PATH, but *does not modify the PATH in the environment*.
+Takes the exact same options as `set`.
 
 ```js
-
-// Asynchronously
-
 npmPath.get(function(err, $PATH) {
   console.log($PATH)
-  // did not modify process.env[PATH]
+  
+  // Note: current environment is NOT modified!
+  console.log(process.env[PATH] == $PATH) // false
 })
 
 // options is optional, takes same options as `npmPath.set`
 npmPath.get(options, function(err, $PATH) {
   console.log($PATH)
 })
+```
 
-// Synchronously
+#### Synchronous Alternative
 
-var $PATH = npmPath.getSync()
+```js
+//  supplying no callback will execute method synchronously
+var $PATH = npmPath.get()
+console.log($PATH)
+console.log(process.env[PATH] == $PATH) // false
+
+// more explicit alternative syntax
+$PATH = npmPath.getSync()
 
 ```
 
 ### Options
 
-Both `set` and `get` takes an optional options object, with optional `env` and `cwd` keys.
+Both `set` and `get` take an optional options object, with optional `env` & `cwd` keys.
 
 * Set `options.env` if you wish to use something other than `process.env` (the default)
 * Set `options.cwd` if you wish to use something other than `process.cwd()` (the default)
@@ -118,7 +128,11 @@ npmPath.PATH // 'Path', probably
 // rest of the world
 npmPath.PATH // 'PATH'
 
-// Usage:
+```
+
+#### Example Usage
+
+```js
 process.env[npmPath.PATH] // get path environment variable
 
 // set path environment variable manually
