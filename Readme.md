@@ -152,6 +152,10 @@ npmPath.SEPARATOR // ';'
 npmPath.SEPARATOR // ':'
 ```
 
+## Credit
+
+Path lookup code adapted directly from npm.
+
 # License
 
 MIT
