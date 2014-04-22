@@ -77,7 +77,7 @@ npmPath.setSync(options)
 ```
 
 
-### Get $PATH
+### Get PATH
 
 This will get npm augmented PATH, but *does not modify the PATH in the environment*.
 Takes the exact same options as `set`.
