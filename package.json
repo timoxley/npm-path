@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Get a PATH with all executables available to npm scripts.",
   "main": "index.js",
-  "bin": "bin/npm-path",
+  "bin": {
+    "npm-path": "bin/npm-path"
+  },
   "scripts": {
     "test": "faucet"
   },
@@ -15,5 +17,21 @@
   },
   "dependencies": {
     "which": "^1.0.5"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/timoxley/npm-path.git"
+  },
+  "keywords": [
+    "npm",
+    "run",
+    "executable"
+  ],
+  "bugs": {
+    "url": "https://github.com/timoxley/npm-path/issues"
+  },
+  "homepage": "https://github.com/timoxley/npm-path"
 }
