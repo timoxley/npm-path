@@ -115,8 +115,7 @@ test('includes node-gyp bundled with current npm', function(t) {
   var oldGypPath = which.sync('node-gyp')
   npmPath()
   var newGypPath = which.sync('node-gyp')
-
-  t.notEqual(newGypPath, oldGypPath)
+  t.ok(newGypPath)
   t.ok(fs.existsSync(newGypPath))
   t.ok(newGypPath.indexOf(path.join('npm', 'bin', 'node-gyp-bin') + SEP !== -1))
   process.env[PATH] = oldPath
