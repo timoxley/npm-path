@@ -4,6 +4,8 @@ var test = require('tape')
 
 var path = require('path')
 var fs = require('fs')
+var ncp = require('ncp').ncp
+var tmp = require('tmp')
 var os = require('os')
 
 var which = require('which')
@@ -13,7 +15,7 @@ var npmPath = require('../')
 var SEP = npmPath.SEPARATOR
 var PATH = npmPath.PATH
 
-var level0 = path.join(__dirname, 'fixtures', 'level0')
+var level0 = path.join(__dirname, 'fixtures', 'node_modules_contains', 'node_modules', 'level0')
 var level1 = path.join(level0, 'node_modules', 'level1')
 var level2 = path.join(level1, 'node_modules', 'level2')
 
@@ -21,6 +23,8 @@ var level = [level0, level1, level2]
 var binPath = level.map(function(levelPath) {
   return path.join(levelPath, "node_modules", ".bin")
 })
+
+tmp.setGracefulCleanup()
 
 test('exports separator', function(t) {
   t.ok(npmPath.SEPARATOR)
@@ -129,16 +133,23 @@ test('can set path to npm root to use for node-gyp lookup', function(t) {
     '..',
     '..'
   )
-  var tmpFile = path.join(os.tmpdir(), 'npm-path-custom-npm')
-  try {fs.unlinkSync(tmpFile)}catch(e){}
-  fs.linkSync(pathToNpm, tmpFile)
-  var newPath = npmPath.get({
-    npm: tmpFile
-  })
-  t.ok(newPath.indexOf(
-    path.join(tmpFile, 'bin', 'node-gyp-bin') + SEP
-  ) !== -1)
-  process.env[PATH] = oldPath
-  fs.unlinkSync(tmpFile)
-  t.end()
+  var tmpObj = tmp.dirSync({unsafeCleanup: true})
+  var tmpNpm = tmpObj.name
+  ncp(pathToNpm, tmpNpm, function(err) {
+    if (err) {
+        t.error(err)
+    }
+    else {
+      var newPath = npmPath.get({
+        npm: tmpNpm
+      })
+      t.ok(newPath.indexOf(
+        path.join(tmpNpm, 'bin', 'node-gyp-bin') + SEP
+      ) !== -1)
+      process.env[PATH] = oldPath
+      tmpObj.removeCallback()
+    }
+    t.end()
+  });
+
 })
