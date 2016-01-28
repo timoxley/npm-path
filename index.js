@@ -1,12 +1,17 @@
 "use strict"
 
-var fs = require('fs')
+var fs   = require('fs')
 var path = require('path')
-var which = require('which')
+
+var arrayUniq = require('array-uniq')
+var which     = require('which')
+
 var findPrefix = require('./find-prefix')
 
-var PATH = getPATHKey()
+
+var PATH      = getPATHKey()
 var SEPARATOR = getPATHSeparator()
+
 
 /**
  * Get new $PATH setting with additional paths supplied by the npm.
@@ -16,7 +21,6 @@ var SEPARATOR = getPATHSeparator()
  * @param String options.wd Working directory. Default: process.cwd()
  * @param Function fn callback function.
  */
-
 function getPath(options, fn) {
   var wd = options.cwd = options.cwd || process.cwd()
   var env = options.env = options.env || process.env
@@ -29,10 +33,15 @@ function getPath(options, fn) {
         // ignore err if cannot find prefix
         pathArr.unshift(path.join(prefixPath, "node_modules", ".bin"))
       }
+
       // we also unshift the bundled node-gyp-bin folder so that
       // the bundled one will be used for installing things.
       pathArr.unshift(path.join(path.dirname(npmPath), "node-gyp-bin"))
-      if (env[PATH]) pathArr.push(env[PATH])
+      if (env[PATH]) pathArr = pathArr.concat(env[PATH].split(SEPARATOR))
+
+      // Remove duplicated entries
+      pathArr = arrayUniq(pathArr)
+
       fn(null, pathArr.join(SEPARATOR))
     })
   })
@@ -41,7 +50,6 @@ function getPath(options, fn) {
 /**
  * Async wrapper around `getPath`.
  */
-
 function getPathAsync(options, fn) {
   // options is optional
   if (options instanceof Function) fn = options, options = {}
@@ -55,7 +63,6 @@ function getPathAsync(options, fn) {
 /**
  * Sync wrapper around `getPath`.
  */
-
 function getPathSync(options) {
   options = options || {}
   options.isSync = true
@@ -77,7 +84,6 @@ function getPathSync(options) {
  * @param String options.wd Working directory. Default: process.cwd()
  * @param Function fn callback function.
  */
-
 function setPathAsync(options, fn) {
   // options is optional
   if (options instanceof Function) fn = options, options = {}
@@ -93,7 +99,6 @@ function setPathAsync(options, fn) {
 /**
  * Sync version of `setPathAsync`
  */
-
 function setPathSync(options) {
   options = options || {}
   var newPath = getPathSync(options)
@@ -106,7 +111,6 @@ function setPathSync(options) {
  *
  * @return Array
  */
-
 function getPathArr(options) {
   var wd = options.cwd
   var pathArr = []
@@ -130,7 +134,6 @@ function getPathArr(options) {
  * Use callback-style signature but toggle sync execution if `isSync` is true.
  * If options.npm is supplied, this will simply provide npm/bin/npm-cli.
  */
-
 function whichNpm(options, fn) {
   var npmCli = options.npm && path.join(options.npm, 'bin', 'npm-cli.js')
 
@@ -157,7 +160,6 @@ function whichNpm(options, fn) {
 /**
  * Get key to use as $PATH in environment
  */
-
 function getPATHKey() {
   var PATH = 'PATH'
 
@@ -176,10 +178,10 @@ function getPATHKey() {
 /**
  * Get $PATH separator based on environment
  */
-
 function getPATHSeparator() {
   return process.platform === "win32" ? ";" : ":"
 }
+
 
 module.exports = setPathAsync
 module.exports.get = getPathAsync
