@@ -170,6 +170,17 @@ test('includes node-gyp bundled with current npm', function(t) {
   t.end()
 })
 
+test('remove duplicated entries', function(t) {
+  const pathWithDuplicates = '/bin:/sbin:/bin'
+
+  var newPath = npmPath({env:{PATH:pathWithDuplicates}}).split(':')
+
+  // Set size is equal to array length if there are no duplicates
+  t.equal(newPath.length, (new Set(newPath)).size)
+
+  t.end()
+})
+
 test('can set path to npm root to use for node-gyp lookup', function(t) {
   var oldPath = process.env[PATH]
   var pathToNpm = path.resolve(
