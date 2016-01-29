@@ -104,7 +104,7 @@ function setPathSync(options) {
 function getPathArr(options) {
   var wd = options.cwd
   var pathArr = []
-  var p = wd.split("node_modules")
+  var p = wd.split(path.sep + "node_modules" + path.sep)
   var acc = path.resolve(p.shift())
 
   // first add the directory containing the `node` executable currently
