@@ -3,6 +3,7 @@
 var fs = require('fs')
 var path = require('path')
 var which = require('which')
+var findPrefix = require('./find-prefix')
 
 var PATH = getPATHKey()
 var SEPARATOR = getPATHSeparator()
@@ -23,12 +24,17 @@ function getPath(options, fn) {
 
   whichNpm(options, function(err, npmPath) {
     if (err) return fn(err)
-
-    // we also unshift the bundled node-gyp-bin folder so that
-    // the bundled one will be used for installing things.
-    pathArr.unshift(path.join(path.dirname(npmPath), "node-gyp-bin"))
-    if (env[PATH]) pathArr.push(env[PATH])
-    fn(null, pathArr.join(SEPARATOR))
+    findPrefix(options, function (err, prefixPath) {
+      if (!err && prefixPath) {
+        // ignore err if cannot find prefix
+        pathArr.unshift(path.join(prefixPath, "node_modules", ".bin"))
+      }
+      // we also unshift the bundled node-gyp-bin folder so that
+      // the bundled one will be used for installing things.
+      pathArr.unshift(path.join(path.dirname(npmPath), "node-gyp-bin"))
+      if (env[PATH]) pathArr.push(env[PATH])
+      fn(null, pathArr.join(SEPARATOR))
+    })
   })
 }
 

@@ -15,7 +15,7 @@ var npmPath = require('../')
 var SEP = npmPath.SEPARATOR
 var PATH = npmPath.PATH
 
-var level0 = path.join(__dirname, 'fixtures', 'node_modules_contains', 'node_modules', 'level0')
+var level0 = path.join(__dirname, 'fixture', 'level0')
 var level1 = path.join(level0, 'node_modules', 'level1')
 var level2 = path.join(level1, 'node_modules', 'level2')
 
@@ -74,6 +74,24 @@ test('async options is optional', function(t) {
     t.end()
   })
   isAsync = true // can only be set if above callback not synchronous
+})
+
+test('includes bin from sibling dirs', function(t) {
+  t.test('from existing sibling directory', function(t) {
+    var level1Path = npmPath.getSync({cwd: path.join(level[0], 'test')})
+    t.ok(level1Path.indexOf(binPath[0] + SEP) != -1, 'should include level 0 .bin')
+    t.ok(level1Path.indexOf(binPath[2] + SEP) === -1, 'should not include child paths')
+    t.end()
+  })
+
+  t.test('from existing sibling directory async', function(t) {
+    npmPath({cwd: path.join(level[0], 'test')}, function(err, level1Path) {
+      t.ifError(err)
+      t.ok(level1Path.indexOf(binPath[0] + SEP) != -1, 'should include level 0 .bin')
+      t.ok(level1Path.indexOf(binPath[2] + SEP) === -1, 'should not include child paths')
+      t.end()
+    })
+  })
 })
 
 test('includes all .bin dirs in all parent node_modules folders', function(t) {
