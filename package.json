@@ -13,10 +13,8 @@
   "license": "MIT",
   "devDependencies": {
     "faucet": "0.0.1",
-    "ncp": "^2.0.0",
     "npm": "^3.5.2",
-    "tape": "^4.0.0",
-    "tmp": "0.0.28"
+    "tape": "^4.0.0"
   },
   "dependencies": {
     "which": "^1.1.1"
