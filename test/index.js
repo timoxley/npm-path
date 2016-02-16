@@ -118,6 +118,36 @@ test('includes all .bin dirs in all parent node_modules folders', function(t) {
   t.end()
 })
 
+test('handles directories with node_modules in the name', function(t) {
+  var trickyL0 = level[0].replace('level0', 'level0_node_modules')
+  var trickyL1 = level[1].replace('level0', 'level0_node_modules')
+  var trickyL2 = level[2].replace('level0', 'level0_node_modules')
+
+  t.test('no nesting', function(t) {
+    var level0Path = npmPath.getSync({cwd: trickyL0})
+    t.ok(level0Path.indexOf(path.join(trickyL0, 'node_modules', '.bin') + SEP) != -1, 'should include level 0 .bin')
+    t.end()
+  })
+
+  t.test('1 level of nesting', function(t) {
+    var level1Path = npmPath.getSync({cwd: trickyL1})
+
+    t.ok(level1Path.indexOf(path.join(trickyL0, 'node_modules', '.bin') + SEP) != -1, 'should include level 0 .bin')
+    t.ok(level1Path.indexOf(path.join(trickyL1, 'node_modules', '.bin') + SEP) != -1, 'should include level 1 .bin')
+    t.end()
+  })
+
+  t.test('2 levels of nesting', function(t) {
+    var level2Path = npmPath.getSync({cwd: trickyL2})
+
+    t.ok(level2Path.indexOf(path.join(trickyL0, 'node_modules', '.bin') + SEP) != -1, 'should include level 0 .bin')
+    t.ok(level2Path.indexOf(path.join(trickyL1, 'node_modules', '.bin') + SEP) != -1, 'should include level 1 .bin')
+    t.ok(level2Path.indexOf(path.join(trickyL2, 'node_modules', '.bin') + SEP) != -1, 'should include level 1 .bin')
+    t.end()
+  })
+
+  t.end()
+})
 
 test('can set path', function(t) {
   var oldPath = process.env[PATH]
