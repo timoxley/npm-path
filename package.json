@@ -17,7 +17,6 @@
     "tape": "^4.4.0"
   },
   "dependencies": {
-    "array-uniq": "^1.0.3",
     "which": "^1.2.4"
   },
   "directories": {

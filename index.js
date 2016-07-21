@@ -3,8 +3,7 @@
 var fs   = require('fs')
 var path = require('path')
 
-var arrayUniq = require('array-uniq')
-var which     = require('which')
+var which = require('which')
 
 var findPrefix = require('./find-prefix')
 
@@ -40,7 +39,7 @@ function getPath(options, fn) {
       if (env[PATH]) pathArr = pathArr.concat(env[PATH].split(SEPARATOR))
 
       // Remove duplicated entries
-      pathArr = arrayUniq(pathArr)
+      pathArr = Array.from(new Set(pathArr))
 
       fn(null, pathArr.join(SEPARATOR))
     })
