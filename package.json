@@ -13,12 +13,12 @@
   "license": "MIT",
   "devDependencies": {
     "faucet": "0.0.1",
-    "npm": "^3.7.2",
+    "npm": "^3.10.5",
     "standard": "^7.1.2",
-    "tape": "^4.4.0"
+    "tape": "^4.6.0"
   },
   "dependencies": {
-    "which": "^1.2.4"
+    "which": "^1.2.10"
   },
   "directories": {
     "test": "test"
