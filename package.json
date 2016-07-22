@@ -1,6 +1,6 @@
 {
   "name": "npm-path",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Get a PATH with all executables available to npm scripts.",
   "main": "index.js",
   "bin": {
@@ -12,7 +12,7 @@
   "author": "Tim Oxley",
   "license": "MIT",
   "engines": {
-    "node": ">=4.4.5"
+    "node": ">=4.2.0"
   },
   "devDependencies": {
     "faucet": "0.0.1",
