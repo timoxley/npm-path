@@ -207,3 +207,36 @@ test('can set path to npm root to use for node-gyp lookup', function (t) {
   t.end()
 })
 
+test('error if passing bad path to npm root', function (t) {
+  const oldPath = process.env[PATH]
+
+  const tmpFile = path.join(os.tmpdir(), 'npm-path-custom-npm')
+  try {
+    fs.unlinkSync(tmpFile)
+  } catch (err) {
+    err // ignore
+  }
+  t.throws(() => {
+    npmPath.get({
+      npm: tmpFile
+    })
+  })
+  process.env[PATH] = oldPath
+  t.end()
+})
+
+test('no error if no npm on existing path', function (t) {
+  const oldPath = process.env[PATH]
+
+  process.env[PATH] = ''
+
+  const newPath = npmPath.get()
+
+  t.ok(newPath.indexOf(
+    path.join('bin', 'node-gyp-bin') + SEP
+  ) === -1)
+
+  process.env[PATH] = oldPath
+  t.end()
+})
+

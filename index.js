@@ -23,17 +23,26 @@ function getPath (options, fn) {
   const env = options.env = options.env || process.env
   let pathArr = getPathArr(options)
 
-  whichNpm(options, function (err, npmPath) {
-    if (err) return fn(err)
-    findPrefix(options, function (err, prefixPath) {
-      if (!err && prefixPath) {
-        // ignore err if cannot find prefix
-        pathArr.unshift(path.join(prefixPath, 'node_modules', '.bin'))
-      }
+  findPrefix(options, function (err, prefixPath) {
+    if (!err && prefixPath) {
+      // ignore err if cannot find prefix
+      pathArr.unshift(path.join(prefixPath, 'node_modules', '.bin'))
+    }
 
+    whichNpm(options, function (err, npmPath) {
       // we also unshift the bundled node-gyp-bin folder so that
       // the bundled one will be used for installing things.
-      pathArr.unshift(path.join(path.dirname(npmPath), 'node-gyp-bin'))
+
+      // simply ignore this step if there was no npm found
+      if (err || !npmPath) {
+        // ...unless npm path was explicitly passed in
+        if (options.npm) {
+          return fn(err || new Error('Cannot find ' + options.npm))
+        }
+      } else {
+        pathArr.unshift(path.join(path.dirname(npmPath), 'node-gyp-bin'))
+      }
+
       if (env[PATH]) pathArr = pathArr.concat(env[PATH].split(SEPARATOR))
 
       // Remove duplicated entries
@@ -146,16 +155,20 @@ function whichNpm (options, fn) {
   const npmCli = options.npm && path.join(options.npm, 'bin', 'npm-cli.js')
 
   if (options.isSync) {
-    fn(null, fs.realpathSync(
-      npmCli || which.sync('npm')
-    ))
+    let npmPath = null
+
+    try {
+      npmPath = fs.realpathSync(npmCli || which.sync('npm'))
+    } catch (err) {
+      return fn(err)
+    }
+
+    fn(null, npmPath)
     return
   }
 
   if (options.npm) {
-    process.nextTick(function () {
-      fn(null, npmCli)
-    })
+    fs.realpath(npmCli, fn)
     return
   }
 
