@@ -17,9 +17,9 @@
   },
   "devDependencies": {
     "faucet": "0.0.1",
-    "npm": "^3.10.5",
+    "npm": "^3.10.10",
     "standard": "^7.1.2",
-    "tape": "^4.6.0"
+    "tape": "^4.8.0"
   },
   "dependencies": {
     "which": "^1.2.10"
