@@ -7,7 +7,7 @@
     "npm-path": "bin/npm-path"
   },
   "scripts": {
-    "pretest": "standard *.js test/*.js bin/*.js",
+    "pretest": "standard *.js test/*.js bin/*",
     "test": "faucet"
   },
   "author": "Tim Oxley",
