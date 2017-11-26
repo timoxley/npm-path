@@ -34,7 +34,7 @@ test('exports $PATH key', function (t) {
 
 test('includes current node executable dir', function (t) {
   const level0Path = npmPath.getSync({cwd: level0})
-  t.ok(level0Path.indexOf(path.dirname(process.execPath) + SEP) !== -1)
+  t.notEqual(level0Path.indexOf(path.dirname(process.execPath) + SEP), -1)
   t.end()
 })
 
@@ -43,7 +43,7 @@ test('async version works', function (t) {
   npmPath.get({cwd: level0}, function (err, level0Path) {
     t.ifError(err)
     t.ok(isAsync)
-    t.ok(level0Path.indexOf(path.dirname(process.execPath) + SEP) !== -1)
+    t.notEqual(level0Path.indexOf(path.dirname(process.execPath) + SEP), -1)
     t.end()
   })
   isAsync = true // can only be set if above callback not synchronous
@@ -51,13 +51,13 @@ test('async version works', function (t) {
 
 test('no fn == sync', function (t) {
   const level0Path = npmPath.get({cwd: level0})
-  t.ok(level0Path.indexOf(path.dirname(process.execPath) + SEP) !== -1)
+  t.notEqual(level0Path.indexOf(path.dirname(process.execPath) + SEP), -1)
   t.end()
 })
 
 test('sync options is optional', function (t) {
   const newPath = npmPath.get()
-  t.ok(newPath.indexOf(path.dirname(process.execPath) + SEP) !== -1)
+  t.notEqual(newPath.indexOf(path.dirname(process.execPath) + SEP), -1)
   t.end()
 })
 
@@ -65,7 +65,7 @@ test('async options is optional', function (t) {
   let isAsync = false
   npmPath.get(function (err, newPath) {
     t.ifError(err)
-    t.ok(newPath.indexOf(path.dirname(process.execPath) + SEP) !== -1)
+    t.notEqual(newPath.indexOf(path.dirname(process.execPath) + SEP), -1)
     t.ok(isAsync)
     t.end()
   })
@@ -75,16 +75,16 @@ test('async options is optional', function (t) {
 test('includes bin from sibling dirs', { skip: true }, function (t) {
   t.test('from existing sibling directory', function (t) {
     const level1Path = npmPath.getSync({cwd: path.join(level[0], 'test')})
-    t.ok(level1Path.indexOf(binPath[0] + SEP) !== -1, 'should include level 0 .bin')
-    t.ok(level1Path.indexOf(binPath[2] + SEP) === -1, 'should not include child paths')
+    t.notEqual(level1Path.indexOf(binPath[0] + SEP), -1, 'should include level 0 .bin')
+    t.equal(level1Path.indexOf(binPath[2] + SEP), -1, 'should not include child paths')
     t.end()
   })
 
   t.test('from existing sibling directory async', function (t) {
     npmPath({cwd: path.join(level[0], 'test')}, function (err, level1Path) {
       t.ifError(err)
-      t.ok(level1Path.indexOf(binPath[0] + SEP) !== -1, 'should include level 0 .bin')
-      t.ok(level1Path.indexOf(binPath[2] + SEP) === -1, 'should not include child paths')
+      t.notEqual(level1Path.indexOf(binPath[0] + SEP), -1, 'should include level 0 .bin')
+      t.equal(level1Path.indexOf(binPath[2] + SEP), -1, 'should not include child paths')
       t.end()
     })
   })
@@ -93,25 +93,25 @@ test('includes bin from sibling dirs', { skip: true }, function (t) {
 test('includes all .bin dirs in all parent node_modules folders', function (t) {
   t.test('no nesting', function (t) {
     const level0Path = npmPath.getSync({cwd: level[0]})
-    t.ok(level0Path.indexOf(binPath[0] + SEP) !== -1, 'should include level 0 .bin')
-    t.ok(level0Path.indexOf(binPath[1] + SEP) === -1, 'should not include child paths')
-    t.ok(level0Path.indexOf(binPath[2] + SEP) === -1, 'should not include child paths')
+    t.notEqual(level0Path.indexOf(binPath[0] + SEP), -1, 'should include level 0 .bin')
+    t.equal(level0Path.indexOf(binPath[1] + SEP), -1, 'should not include child paths')
+    t.equal(level0Path.indexOf(binPath[2] + SEP), -1, 'should not include child paths')
     t.end()
   })
 
   t.test('1 level of nesting', function (t) {
     const level1Path = npmPath.getSync({cwd: level[1]})
-    t.ok(level1Path.indexOf(binPath[0] + SEP) !== -1, 'should include level 0 .bin')
-    t.ok(level1Path.indexOf(binPath[1] + SEP) !== -1, 'should include level 1 .bin')
-    t.ok(level1Path.indexOf(binPath[2] + SEP) === -1, 'should not include child paths')
+    t.notEqual(level1Path.indexOf(binPath[0] + SEP), -1, 'should include level 0 .bin')
+    t.notEqual(level1Path.indexOf(binPath[1] + SEP), -1, 'should include level 1 .bin')
+    t.equal(level1Path.indexOf(binPath[2] + SEP), -1, 'should not include child paths')
     t.end()
   })
 
   t.test('2 levels of nesting', function (t) {
     const level1Path = npmPath.getSync({cwd: level[2]})
-    t.ok(level1Path.indexOf(binPath[0] + SEP) !== -1, 'should include level 0 .bin')
-    t.ok(level1Path.indexOf(binPath[1] + SEP) !== -1, 'should include level 1 .bin')
-    t.ok(level1Path.indexOf(binPath[2] + SEP) !== -1, 'should include level 2 .bin')
+    t.notEqual(level1Path.indexOf(binPath[0] + SEP), -1, 'should include level 0 .bin')
+    t.notEqual(level1Path.indexOf(binPath[1] + SEP), -1, 'should include level 1 .bin')
+    t.notEqual(level1Path.indexOf(binPath[2] + SEP), -1, 'should include level 2 .bin')
     t.end()
   })
 
@@ -125,24 +125,24 @@ test('handles directories with node_modules in the name', function (t) {
 
   t.test('no nesting', function (t) {
     const level0Path = npmPath.getSync({cwd: trickyL0})
-    t.ok(level0Path.indexOf(path.join(trickyL0, 'node_modules', '.bin') + SEP) !== -1, 'should include level 0 .bin')
+    t.notEqual(level0Path.indexOf(path.join(trickyL0, 'node_modules', '.bin') + SEP), -1, 'should include level 0 .bin')
     t.end()
   })
 
   t.test('1 level of nesting', function (t) {
     const level1Path = npmPath.getSync({cwd: trickyL1})
 
-    t.ok(level1Path.indexOf(path.join(trickyL0, 'node_modules', '.bin') + SEP) !== -1, 'should include level 0 .bin')
-    t.ok(level1Path.indexOf(path.join(trickyL1, 'node_modules', '.bin') + SEP) !== -1, 'should include level 1 .bin')
+    t.notEqual(level1Path.indexOf(path.join(trickyL0, 'node_modules', '.bin') + SEP), -1, 'should include level 0 .bin')
+    t.notEqual(level1Path.indexOf(path.join(trickyL1, 'node_modules', '.bin') + SEP), -1, 'should include level 1 .bin')
     t.end()
   })
 
   t.test('2 levels of nesting', function (t) {
     const level2Path = npmPath.getSync({cwd: trickyL2})
 
-    t.ok(level2Path.indexOf(path.join(trickyL0, 'node_modules', '.bin') + SEP) !== -1, 'should include level 0 .bin')
-    t.ok(level2Path.indexOf(path.join(trickyL1, 'node_modules', '.bin') + SEP) !== -1, 'should include level 1 .bin')
-    t.ok(level2Path.indexOf(path.join(trickyL2, 'node_modules', '.bin') + SEP) !== -1, 'should include level 1 .bin')
+    t.notEqual(level2Path.indexOf(path.join(trickyL0, 'node_modules', '.bin') + SEP), -1, 'should include level 0 .bin')
+    t.notEqual(level2Path.indexOf(path.join(trickyL1, 'node_modules', '.bin') + SEP), -1, 'should include level 1 .bin')
+    t.notEqual(level2Path.indexOf(path.join(trickyL2, 'node_modules', '.bin') + SEP), -1, 'should include level 1 .bin')
     t.end()
   })
 
@@ -164,7 +164,7 @@ test('includes node-gyp bundled with current npm', { skip: true }, function (t) 
   const newGypPath = which.sync('node-gyp')
   t.ok(newGypPath)
   t.ok(fs.existsSync(newGypPath))
-  t.ok(newGypPath.indexOf(path.join('npm', 'bin', 'node-gyp-bin') + SEP !== -1))
+  t.notEqual(newGypPath.indexOf(path.join('npm', 'bin', 'node-gyp-bin') + SEP), -1)
   process.env[PATH] = oldPath
   t.end()
 })
@@ -199,9 +199,7 @@ test('can set path to npm root to use for node-gyp lookup', { skip: true }, func
   const newPath = npmPath.get({
     npm: tmpFile
   })
-  t.ok(newPath.indexOf(
-    path.join(tmpFile, 'bin', 'node-gyp-bin') + SEP
-  ) !== -1)
+  t.notEqual(newPath.indexOf(path.join(tmpFile, 'bin', 'node-gyp-bin') + SEP), -1)
   process.env[PATH] = oldPath
   fs.unlinkSync(tmpFile)
   t.end()
@@ -232,9 +230,7 @@ test('no error if no npm on existing path', function (t) {
 
   const newPath = npmPath.get()
 
-  t.ok(newPath.indexOf(
-    path.join('bin', 'node-gyp-bin') + SEP
-  ) === -1)
+  t.equal(newPath.indexOf(path.join('bin', 'node-gyp-bin') + SEP), -1)
 
   process.env[PATH] = oldPath
   t.end()
