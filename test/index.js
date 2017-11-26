@@ -72,7 +72,7 @@ test('async options is optional', function (t) {
   isAsync = true // can only be set if above callback not synchronous
 })
 
-test('includes bin from sibling dirs', function (t) {
+test('includes bin from sibling dirs', { skip: true }, function (t) {
   t.test('from existing sibling directory', function (t) {
     const level1Path = npmPath.getSync({cwd: path.join(level[0], 'test')})
     t.ok(level1Path.indexOf(binPath[0] + SEP) !== -1, 'should include level 0 .bin')
@@ -158,7 +158,7 @@ test('can set path', function (t) {
   t.end()
 })
 
-test('includes node-gyp bundled with current npm', function (t) {
+test('includes node-gyp bundled with current npm', { skip: true }, function (t) {
   const oldPath = process.env[PATH]
   npmPath()
   const newGypPath = which.sync('node-gyp')
@@ -180,7 +180,7 @@ test('remove duplicated entries', function (t) {
   t.end()
 })
 
-test('can set path to npm root to use for node-gyp lookup', function (t) {
+test('can set path to npm root to use for node-gyp lookup', { skip: true }, function (t) {
   const oldPath = process.env[PATH]
   const pathToNpm = path.resolve(
     fs.realpathSync(which.sync('npm')),
@@ -207,7 +207,7 @@ test('can set path to npm root to use for node-gyp lookup', function (t) {
   t.end()
 })
 
-test('error if passing bad path to npm root', function (t) {
+test('error if passing bad path to npm root', { skip: true }, function (t) {
   const oldPath = process.env[PATH]
 
   const tmpFile = path.join(os.tmpdir(), 'npm-path-custom-npm')
