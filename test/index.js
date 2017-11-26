@@ -8,7 +8,7 @@ const os = require('os')
 
 const which = require('which')
 
-const npmPath = require('../src')
+const npmPath = require('../')
 
 const SEP = npmPath.SEPARATOR
 const PATH = npmPath.PATH

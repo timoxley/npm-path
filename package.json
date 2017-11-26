@@ -7,8 +7,10 @@
     "npm-path": "bin/npm-path"
   },
   "scripts": {
-    "pretest": "standard *.js test/*.js bin/*",
-    "test": "faucet"
+    "build": "babel src --out-dir .",
+    "prepublish": "npm run build",
+    "pretest": "standard src/* test/* bin/*",
+    "test": "npm run build && faucet test"
   },
   "author": "Tim Oxley",
   "license": "MIT",
@@ -16,6 +18,8 @@
     "node": ">=4.2.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-airbnb": "^2.4.0",
     "faucet": "0.0.1",
     "npm": "^3.10.10",
     "standard": "^7.1.2",
