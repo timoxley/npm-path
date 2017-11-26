@@ -46,7 +46,7 @@ function getPath (options, fn) {
       if (env[PATH]) pathArr = pathArr.concat(env[PATH].split(SEPARATOR))
 
       // Remove duplicated entries
-      pathArr = Array.from(new Set(pathArr))
+      pathArr = [...new Set(pathArr)]
 
       fn(null, pathArr.join(SEPARATOR))
     })
