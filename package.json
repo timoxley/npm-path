@@ -10,7 +10,8 @@
     "build": "babel src --out-dir .",
     "prepublish": "npm run build",
     "pretest": "standard src/* test/* bin/*",
-    "test": "npm run build && faucet test"
+    "tests-only": "npm run build && faucet test",
+    "test": "npm run tests-only"
   },
   "author": "Tim Oxley",
   "license": "MIT",
