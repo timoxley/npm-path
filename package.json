@@ -9,8 +9,9 @@
   "scripts": {
     "build": "babel src --out-dir .",
     "prepublish": "npm run build",
+    "pretests-only": "npm run build",
+    "tests-only": "tape test -r airbnb-js-shims -r ./test/_babel | faucet",
     "pretest": "standard src/* test/* bin/*",
-    "tests-only": "npm run build && faucet test",
     "test": "npm run tests-only"
   },
   "author": "Tim Oxley",
@@ -19,8 +20,10 @@
     "node": ">=4.2.0"
   },
   "devDependencies": {
+    "airbnb-js-shims": "^1.4.0",
     "babel-cli": "^6.26.0",
     "babel-preset-airbnb": "^2.4.0",
+    "babel-register": "^6.26.0",
     "faucet": "0.0.1",
     "npm": "^3.10.10",
     "standard": "^7.1.2",
