@@ -59,12 +59,12 @@ function getPath (options, fn) {
 
 function getPathAsync (options, fn) {
   // options is optional
-  if (options instanceof Function) {
+  if (typeof options === 'function') {
     fn = options
     options = {}
   }
   // if no fn, execute as sync
-  if (!(fn instanceof Function)) return getPathSync(options)
+  if (typeof fn !== 'function') return getPathSync(options)
   options = options || {}
   options.isSync = false
   return getPath(options, fn)
@@ -98,13 +98,13 @@ function getPathSync (options) {
 
 function setPathAsync (options, fn) {
   // options is optional
-  if (options instanceof Function) {
+  if (typeof options === 'function') {
     fn = options
     options = {}
   }
 
   // if no fn, execute as sync
-  if (!(fn instanceof Function)) return setPathSync(options)
+  if (typeof fn !== 'function') return setPathSync(options)
 
   getPathAsync(options, function (err, newPath) {
     if (err) return fn(err)
