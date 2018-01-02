@@ -7,9 +7,9 @@
     "npm-path": "bin/npm-path"
   },
   "scripts": {
-    "build": "babel src --out-dir .",
+    "build": "babel src --out-dir . && babel test --out-dir build-test",
     "prepublish": "not-in-publish || npm run build",
-    "tests-only": "tape test -r airbnb-js-shims -r ./test/_babel | faucet",
+    "tests-only": "tape build-test -r airbnb-js-shims | faucet",
     "pretest": "standard src/* test/* bin/*",
     "test": "npm run build && npm run tests-only"
   },
