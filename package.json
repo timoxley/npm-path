@@ -7,6 +7,8 @@
     "npm-path": "bin/npm-path"
   },
   "scripts": {
+    "clean": "rimraf build-test && (rm *.js || true)",
+    "prebuild": "npm run clean",
     "build": "babel src --out-dir . && babel test --out-dir build-test",
     "prepublish": "not-in-publish || npm run build",
     "tests-only": "tape build-test -r airbnb-js-shims | faucet",
@@ -26,6 +28,7 @@
     "faucet": "0.0.1",
     "in-publish": "^2.0.0",
     "npm": "^3.10.10",
+    "rimraf": "^2.6.2",
     "standard": "^7.1.2",
     "tape": "^4.8.0"
   },
