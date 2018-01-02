@@ -18,7 +18,7 @@
   "author": "Tim Oxley",
   "license": "MIT",
   "engines": {
-    "node": ">=4.2.0"
+    "node": ">=0.8"
   },
   "devDependencies": {
     "airbnb-js-shims": "^1.4.0",
