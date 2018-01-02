@@ -9,10 +9,9 @@
   "scripts": {
     "build": "babel src --out-dir .",
     "prepublish": "npm run build",
-    "pretests-only": "npm run build",
     "tests-only": "tape test -r airbnb-js-shims -r ./test/_babel | faucet",
     "pretest": "standard src/* test/* bin/*",
-    "test": "npm run tests-only"
+    "test": "npm run build && npm run tests-only"
   },
   "author": "Tim Oxley",
   "license": "MIT",
