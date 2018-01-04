@@ -5,7 +5,3 @@ node_modules
 npm-shrinkwrap.json
 package-lock.json
 yarn.lock
-
-# Build output
-/*.js
-build-test
