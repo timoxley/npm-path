@@ -201,7 +201,7 @@ function getPATHKey () {
  * Get $PATH separator based on environment
  */
 function getPATHSeparator () {
-  return process.platform === 'win32' ? ';' : ':'
+  return path.delimiter;
 }
 
 module.exports = setPathAsync
