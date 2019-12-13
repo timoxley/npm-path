@@ -27,7 +27,7 @@
     "babel-register": "^6.26.0",
     "faucet": "0.0.1",
     "in-publish": "^2.0.0",
-    "npm": "^3.10.10",
+    "npm": "^6.13.4",
     "rimraf": "^2.6.2",
     "standard": "^7.1.2",
     "tape": "^4.8.0"
